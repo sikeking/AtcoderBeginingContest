@@ -1,57 +1,34 @@
 
 #include <iostream>
-#include <string>
 
 using namespace std;
 
-int main(){
-    int N,K;
-    string S;
-    cin >> N >> K;
-    cin >> S;
-    int length = 0;
-    for(int k = 0;k < N;k++){
-        int count = 0;
-        string S1 = S;
-        if(S1[k] == '0'){
-            for(int i = k;i < N;i++){
-                if(S1[i] == '0'){
-                    for(int j = i;j < N;j++){
-                        if(S1[j] == '0'){
-                            S1[j] = '1';
-                        }else{
-                            count++;
-                            i = j;
-                            break;
-                        }
-                    }
-                }
-                //cout << S1 << endl;
-                //cout << count << endl;
-                if(count == K){
-                    //cout << count;
-                    break;
-                }
-            }
+int main() {
+    int n, k;
+    cin >> n >> k;
+
+    string s;
+    cin >> s;
+
+    int max_len = 1;
+    int last = n - 1, num_zero = (s.back() == '0');
+    for (int first = n - 2; 0 <= first; --first) {
+        if (s[first] == '1'
+            || (s[first] == '0' && s[first + 1] == '0')) {
+            max_len = max(max_len, last - first + 1);
         }
-        for(int i = 0;i < N;i++){
-            if(S1[i] == '1'){
-                if(i == N -1){
-                    length =max(length,1);
-                }
-                for(int j = i;j < N;j++){
-                    if(S1[j] == '0' || S1[j] == '\0'){
-                        //cout << length << endl;
-                        if(i == 0){
-                            length = max(length,j-i);
-                        }else{
-                            length = max(length,j-i+1);
-                        }
-                        i = j;
-                    }
-                }
+        else {
+            ++num_zero;
+            while (k < num_zero) {
+                while (s[last] == '1') --last;
+                while (s[last] == '0') --last;
+                --num_zero;
             }
+            max_len = max(max_len, last - first + 1);
         }
     }
-    cout << length << endl;
+
+    cout << max_len << endl;
+
+    return 0;
 }
